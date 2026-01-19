@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>My LinkHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      min-height: 100vh;
+      color: white;
+      padding: 40px 20px;
+    }
+    .container { max-width: 1400px; margin: 0 auto; text-align: center; }
+
+    h1 {
+      font-size: 58px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcf7f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+    .subtitle { font-size: 24px; opacity: 0.9; margin-bottom: 40px; }
+
+    .add-btn {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(12px);
+      color: white;
+      padding: 18px 50px;
+      border-radius: 50px;
+      font-size: 22px;
+      font-weight: 600;
+      text-decoration: none;
+      border: 2px dashed rgba(255,255,255,0.5);
+      transition: all 0.4s;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .add-btn:hover {
+      transform: translateY(-8px);
+      background: rgba(255,255,255,0.3);
+      border-style: solid;
+    }
+
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 28px;
+      margin-top: 60px;
+    }
+
+    /* Yeh sahi hai – pura card clickable hai */
+    .card {
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(16px);
+      border-radius: 24px;
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.4s ease;
+      height: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: white;
+    }
+    .card:hover {
+      transform: translateY(-18px) scale(1.06);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    .logo {
+      width: 86px;
+      height: 86px;
+      border-radius: 20px;
+      object-fit: cover;
+      margin-bottom: 16px;
+      border: 4px solid rgba(255,255,255,0.2);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    }
+
+    .platform-name {
+      font-size: 19px;
+      font-weight: 600;
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      margin-top: 80px;
+      font-size: 28px;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <p class="subtitle">welcome..</p>
+    <h1>My LinkHub</h1>
+    
+
+    <a href="{% url 'links:add_platform' %}" class="add-btn">Add Platform</a>
+
+    <div class="platform-grid">
+      {% for p in platforms %}
+        <!-- YEH WAALA TAG SAHI SE LAGA HAI – pura card clickable -->
+        <a href="{% url 'links:platform_detail' p.slug %}" class="card">
+          {% if p.logo %}
+            <img src="{{ p.logo.url }}" class="logo" alt="{{ p.name }}">
+          {% else %}
+            <img src="{% static 'logos/default.png' %}" class="logo">
+          {% endif %}
+          <div class="platform-name">{{ p.name }}</div>
+        </a>
+      {% empty %}
+        <div class="empty">
+          <p>There is no platform yet...</p>
+          
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</body>
+</html>
