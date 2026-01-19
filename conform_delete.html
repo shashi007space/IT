@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ platform.name }}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <a href="{% url 'links:home' %}">← Back</a>
+  <div class="platform-header">
+    {% if platform.logo %}
+      <img src="{{ platform.logo.url }}" class="logo big">
+    {% else %}
+      <img src="{% static 'logos/default.png' %}" class="logo big">
+    {% endif %}
+    <h2>{{ platform.name }}</h2>
+
+    <form action="{% url 'links:delete_platform' platform.slug %}" method="POST" onsubmit="return confirm('Delete this platform and all links?');">
+      {% csrf_token %}
+      <button type="submit" class="danger">Delete Platform</button>
+    </form>
+  </div>
+
+  <section class="add-link">
+    <h3>Add Link</h3>
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Add Link</button>
+    </form>
+  </section>
+
+  <section class="links-list">
+    <h3>Saved Links</h3>
+    <ul>
+      {% for link in links %}
+        <li>
+          <a href="{{ link.url }}" target="_blank">{{ link.name }}</a>
+          <form method="POST" action="{% url 'links:delete_link' link.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+          </form>
+          <button onclick="copyToClipboard('{{ link.url }}')">Copy</button>
+          <a href="https://www.facebook.com/sharer/sharer.php?u={{ link.url|urlencode }}" target="_blank">Share</a>
+        </li>
+      {% empty %}
+        <li>No links yet.</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <script>
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Copied to clipboard');
+      }).catch(()=> alert('Copy failed'));
+    }
+  </script>
+</body>
+</html>
