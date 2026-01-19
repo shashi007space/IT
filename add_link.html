@@ -1,0 +1,14 @@
+<form method="POST">
+    {% csrf_token %}
+    <label>Title:</label>
+    <input type="text" name="title" required><br>
+
+    <label>URL:</label>
+    <input type="url" name="url" required><br>
+
+    <button type="submit">Add Link</button>
+</form>
+<a href="{% url 'links:folder_detail' folder.id %}">← Back</a>
+
+
+
