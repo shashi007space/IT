@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Add Platform</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f0f2f5; display:flex; justify-content:center; align-items:center; height:100vh; }
+    .container { background:white; padding:25px; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1); width:350px; }
+    input, button { width:100%; padding:10px; margin-bottom:10px; border-radius:5px; border:1px solid #ccc; }
+    button { background:#4CAF50; color:white; border:none; cursor:pointer; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>Add Platform</h2>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="Platform Name" required>
+    <input type="file" name="logo">
+    <button type="submit">Create Platform</button>
+  </form>
+  <a href="{% url 'links:home' %}">⬅ Back to Home</a>
+</div>
+</body>
+</html>
