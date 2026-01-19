@@ -1,28 +1,25 @@
-"""
-URL configuration for linkHub project.
+from django.urls import path
+from . import views
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.contrib import admin
-from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
+app_name = "links"
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('links.urls', namespace='links')),   # ONLY THIS!
+urlpatterns = urlpatterns = [
+    path('', views.home, name="home"),
+    path('add-platform/', views.add_platform, name="add_platform"),
+    
+
+    # Platform URLs
+    path('platform/<slug:slug>/add-folder/', views.add_folder, name='add_folder'),
+    path('platform/<slug:slug>/delete/', views.delete_platform, name="delete_platform"),
+    path('platform/<slug:slug>/', views.platform_detail, name="platform_detail"),
+
+    # Folder URLs
+    path('folder/<int:id>/', views.folder_detail, name="folder_detail"),
+    path('folder/<int:id>/add-link/', views.add_link, name="add_link"),
+    path('folder/<int:id>/delete/', views.delete_folder, name="delete_folder"),
+
+    # Link URLs
+    path('link/<int:id>/delete/', views.delete_link, name="delete_link"),
+    path('link/<int:id>/edit/', views.edit_link, name="edit_link"),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
