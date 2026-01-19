@@ -1,0 +1,6 @@
+<h2>Create Folder in: {{ platform.name }}</h2>
+<form method="POST">
+  {% csrf_token %}
+  <input type="text" name="name" placeholder="Folder Name" required>
+  <button type="submit">Create Folder</button>
+</form>
