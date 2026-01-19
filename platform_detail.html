@@ -1,0 +1,289 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ platform.name }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fafbff;
+            --card: rgba(255, 255, 255, 0.95);
+            --glass: rgba(255, 255, 255, 0.15);
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --danger: #ef4444;
+            --text: #1e1b4b;
+            --light: #64748b;
+            --border: rgba(99, 102, 241, 0.2);
+            --shadow: 0 20px 50px rgba(99,102,241,0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(99,102,241,0.08) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(236,72,153,0.06) 0%, transparent 20%);
+        }
+
+        /* तुम्हारा original back icon — बिल्कुल वही */
+        .back-btn {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            font-size: 40px;
+            padding: 10px 16px;
+            background: white;
+            border-radius: 18px;
+            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        .back-btn:hover {
+            background: #eef2ff;
+            transform: scale(1.12);
+            box-shadow: 0 12px 30px rgba(99,102,241,0.25);
+        }
+
+        .wrapper {
+            max-width: 1180px;
+            margin: 90px auto 40px;
+            background: var(--card);
+            border-radius: 36px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(99,102,241,0.15);
+            backdrop-filter: blur(20px);
+        }
+
+        /* Header — अबकी बार दिल जीत लेगा */
+        .header {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a78bff 100%);
+            padding: 80px 40px 70px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('https://grainy-gradients.vercel.app/noise.svg');
+            opacity: 0.08;
+            pointer-events: none;
+        }
+
+        .header img {
+            width: 140px;
+            height: 140px;
+            border-radius: 32px;
+            object-fit: cover;
+            border: 8px solid rgba(255,255,255,0.3);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            margin-bottom: 24px;
+            transition: 0.4s ease;
+        }
+        .header img:hover { transform: scale(1.06) rotate(2deg); }
+
+        .platform-name {
+            font-size: 56px;
+            font-weight: 900;
+            letter-spacing: -2px;
+            margin-bottom: 16px;
+            background: linear-gradient(90deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .delete-platform {
+            padding: 10px 28px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(239,68,68,0.35);
+            transition: all 0.3s ease;
+        }
+        .delete-platform:hover {
+            background: #dc2626;
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(239,68,68,0.45);
+        }
+
+        /* Content */
+        .content {
+            padding: 60px 70px 80px;
+        }
+
+        .add-folder {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .add-folder-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 14px 36px;
+            border-radius: 60px;
+            font-size: 17px;
+            font-weight: 700;
+            box-shadow: 0 12px 35px rgba(99,102,241,0.3);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+        .add-folder-btn:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 25px 60px rgba(99,102,241,0.4);
+            background: var(--primary-dark);
+        }
+
+        .folders {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 32px;
+        }
+
+        .folder {
+            background: white;
+            border: 1.5px solid var(--border);
+            border-radius: 28px;
+            padding: 38px 24px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .folder::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            border-radius: 28px 28px 0 0;
+        }
+        .folder:hover {
+            transform: translateY(-16px);
+            box-shadow: 0 30px 60px rgba(99,102,241,0.2);
+            border-color: var(--primary);
+        }
+
+        .folder-icon {
+            font-size: 68px;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 4px 10px rgba(99,102,241,0.2));
+        }
+
+        .folder-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+            display: block;
+            margin: 16px 0;
+            transition: 0.3s;
+        }
+        .folder-name:hover { color: var(--primary); }
+
+        .delete-folder {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: 0.3s;
+            box-shadow: 0 6px 20px rgba(239,68,68,0.3);
+        }
+        .delete-folder:hover {
+            background: #dc2626;
+            transform: translateY(-3px);
+        }
+
+        .no-folders {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 120px 40px;
+            color: var(--light);
+            font-size: 24px;
+            font-weight: 500;
+        }
+        .no-folders strong {
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="{% url 'links:home' %}" class="back-btn">Back</a>
+
+    <div class="wrapper">
+        <div class="header">
+            {% if platform.logo %}
+                <img src="{{ platform.logo.url }}" alt="{{ platform.name }}">
+            {% else %}
+                <img src="{% static 'logos/default.png' %}" alt="Logo">
+            {% endif %}
+            <div class="platform-name">{{ platform.name }}</div>
+            <form action="{% url 'links:delete_platform' platform.slug %}" method="POST"
+                  onsubmit="return confirm('Delete this platform and all links?');">
+                {% csrf_token %}
+                <button type="submit" class="delete-platform">Delete Platform</button>
+            </form>
+        </div>
+
+        <div class="content">
+            <div class="add-folder">
+                <a href="{% url 'links:add_folder' platform.slug %}" class="add-folder-btn">
+                    New Folder Add New Folder
+                </a>
+            </div>
+
+            <div class="folders">
+                {% if folders %}
+                    {% for f in folders %}
+                        <div class="folder">
+                            <div class="folder-icon">Folder</div>
+                            <a href="{% url 'links:folder_detail' f.id %}" class="folder-name">{{ f.name }}</a>
+                            <form action="{% url 'links:delete_folder' f.id %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="delete-folder">Delete</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-folders">
+                        No folders yet.<br>
+                        Click <strong>Add New Folder</strong> to get started!
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
